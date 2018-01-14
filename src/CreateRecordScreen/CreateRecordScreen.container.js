@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { actions as recordsActions } from '.,/records';
-import { CreateRecordScreenComponent } from './HomeScreen.component';
+import { actions as recordsActions } from '../records';
+import { CreateRecordScreenComponent } from './CreateRecordScreen.component';
 
 export const CreateRecordScreenContainer = connect(
   (state) => ({

@@ -1,6 +1,6 @@
 import { Answer, getAnswerCode } from '../questions';
 import { createReducer } from '../utility';
-import { Record } from './records';
+import { Record, getRecordCode } from './records';
 
 export const initialState = {
   id: 1,
