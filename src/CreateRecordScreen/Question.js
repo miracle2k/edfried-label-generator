@@ -1,23 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { getQuestionText, getQuestionAnswers, getAnswerText } from '../data';
+import { getQuestionText, getQuestionAnswers, getAnswerText } from '../questions';
 
 export class Question extends React.Component {
-  static navigationOptions = {
-    title: 'Question',
-  };
-
   handleAnswer = (answer) => () => {
-    const { onAnswer } = this.props.navigation.state.params;
-    onAnswer(answer);
+    this.props.onAnswer(answer);
   };
-
-  componentDidMount() {
-    console.log('Question', this.props.navigation.state.params.question);
-  }
 
   render() {
-    const { question } = this.props.navigation.state.params;
+    const { question } = this.props;
     return (
       <View style={styles.container}>
         <Text>{getQuestionText(question)}</Text>

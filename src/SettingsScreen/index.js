@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export class Settings extends React.Component {
+export class SettingsScreen extends React.Component {
   static navigationOptions = {
     title: 'Settings',
   };
