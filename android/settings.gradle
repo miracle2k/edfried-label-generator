@@ -1,0 +1,3 @@
+rootProject.name = 'product_label_generator'
+
+include ':app'
