@@ -1,8 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { backgroundColor, borderColor, textColor, subheaderColor, fontSize } from '../style';
 import { getQuestionText, getQuestionAnswers, getAnswerText } from '../questions';
 
 export class Question extends React.Component {
+  static propTypes = {
+    question: PropTypes.any.isRequired,
+    onAnswer: PropTypes.func.isRequired,
+  };
+
   handleAnswer = (answer) => () => {
     this.props.onAnswer(answer);
   };
@@ -11,12 +18,16 @@ export class Question extends React.Component {
     const { question } = this.props;
     return (
       <View style={styles.container}>
-        <Text>{getQuestionText(question)}</Text>
-        {getQuestionAnswers(question).map((answer, i) => (
-          <TouchableOpacity onPress={this.handleAnswer(answer)} key={i}>
-            <Text>{getAnswerText(answer)}</Text>
-          </TouchableOpacity>
-        ))}
+        <View style={styles.card}>
+          <Text style={styles.title}>{getQuestionText(question)}</Text>
+          {/*<ScrollView>*/}
+            {getQuestionAnswers(question).map((answer, i) => (
+              <TouchableOpacity onPress={this.handleAnswer(answer)} key={i}>
+                <Text style={styles.option}>{getAnswerText(answer)}</Text>
+              </TouchableOpacity>
+            ))}
+          {/*</ScrollView>*/}
+        </View>
       </View>
     );
   }
@@ -25,16 +36,27 @@ export class Question extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: backgroundColor,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  settings: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
+  card: {
+    minWidth: 300,
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: borderColor,
+    backgroundColor: 'white',
   },
-  newProduct: {
-
+  title: {
+    padding: 20,
+    fontSize: fontSize,
+    color: subheaderColor,
+    borderBottomColor: borderColor,
+    borderBottomWidth: 1,
+  },
+  option: {
+    padding: 20,
+    fontSize: fontSize,
+    color: textColor,
   },
 });

@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { NavigationActions } from 'react-navigation'; 
 import { Question } from './Question.js';
 import { Price } from './Price.js';
-import { getAnswerQuestions, getRecordCode } from '../questions';
+import { getAnswerQuestions, getQuestionAnswers, getRecordCode } from '../questions';
 
 export class CreateRecordScreenComponent extends React.Component {
   static propTypes = {
@@ -27,7 +27,14 @@ export class CreateRecordScreenComponent extends React.Component {
   handleAnswer = (answer) => {
     const answers = [...this.state.answers, answer];
     const [question, ...questions] = [...this.state.questions, ...getAnswerQuestions(answer)];
-    this.setState({ answers, question, questions });
+    this.setState({ answers, question, questions }, () => {
+      if (question) {
+        const questionAnswers = getQuestionAnswers(question);
+        if (questionAnswers.length === 1) {
+          this.handleAnswer(questionAnswers[0]);
+        }
+      }
+    });
   };
 
   handlePriceChange = (price) => {
@@ -47,7 +54,6 @@ export class CreateRecordScreenComponent extends React.Component {
   }
 
   render() {
-    console.log('ProductLabelScreen', this.state);
     const { question, price } = this.state;
     return question ? (
       <Question question={question} onAnswer={this.handleAnswer}/>
