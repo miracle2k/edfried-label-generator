@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { Record, getRecords, getRecordCode } from '../records';
@@ -8,6 +9,11 @@ export class HomeScreenComponent extends React.Component {
     title: 'Product Label Generator',
   };
 
+  static propTypes = {
+    navigation: PropTypes.any.isRequired,
+    records: PropTypes.array.isRequired,
+  };
+
   handleNewProduct = () => {
     const { navigate } = this.props.navigation;
     navigate('CreateRecordScreen');
@@ -15,7 +21,7 @@ export class HomeScreenComponent extends React.Component {
 
   handleSettings = () => {
     const { navigate } = this.props.navigation;
-    navigate('Settings');
+    navigate('SettingsScreen');
   };
 
   render() {

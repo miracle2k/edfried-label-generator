@@ -13,7 +13,11 @@ export class Price extends React.Component {
     const { price, onSubmit } = this.props;
     return (
       <View style={styles.container}>
-        <TextInput value={price + ''} onChangeText={this.handleChangeText}/>
+        <TextInput
+          value={price + ''}
+          onChangeText={this.handleChangeText}
+          keyboardType={'numeric'}
+        />
         <Button title="OK" onPress={onSubmit}/>
       </View>
     );

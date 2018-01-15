@@ -1,8 +1,10 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { reducers as questionsReducers } from '../questions';
 import { reducers as recordsReducers } from '../records';
 
 const reducer = combineReducers({
+  ...questionsReducers,
   ...recordsReducers,
 });
 

@@ -4,11 +4,12 @@ import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { NavigationActions } from 'react-navigation'; 
 import { Question } from './Question.js';
 import { Price } from './Price.js';
-import { rootAnswers, getAnswerQuestions, getRecordCode } from '../questions';
+import { getAnswerQuestions, getRecordCode } from '../questions';
 
 export class CreateRecordScreenComponent extends React.Component {
   static propTypes = {
     navigation: PropTypes.any.isRequired,
+    rootAnswer: PropTypes.any.isRequired,
     createRecord: PropTypes.func.isRequired,
   };
 
@@ -39,7 +40,7 @@ export class CreateRecordScreenComponent extends React.Component {
   };
 
   componentDidMount() {
-    const answer = rootAnswers[0];
+    const answer = this.props.rootAnswer;
     const answers = [answer];
     const [question, ...questions] = getAnswerQuestions(answer);
     this.setState({ answers, question, questions });
