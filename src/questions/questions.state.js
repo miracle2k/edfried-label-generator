@@ -38,9 +38,11 @@ export const actions = { setRootAnswers, setSelectedIndex };
 
 // Selectors
 
+const selectedIndex = (state): number => state.questions.selectedIndex;
+
 const rootAnswers = (state): Answer[] => state.questions.rootAnswers;
 
 const rootAnswer = (state): Answer => state.questions.rootAnswers[state.questions.selectedIndex];
 
-export const selectors = { rootAnswers, rootAnswer };
+export const selectors = { rootAnswers, rootAnswer, selectedIndex };
 

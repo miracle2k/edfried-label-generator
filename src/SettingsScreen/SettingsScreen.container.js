@@ -9,6 +9,7 @@ export const SettingsScreenContainer = connect(
   (state) => ({
     rootAnswers: questionsSelectors.rootAnswers(state),
     rootAnswer: questionsSelectors.rootAnswer(state),
+    selectedIndex: questionsSelectors.selectedIndex(state),
     records: recordsSelectors.records(state),
   }),
   (dispatch) => bindActionCreators({

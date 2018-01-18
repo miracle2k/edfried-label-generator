@@ -58,7 +58,7 @@ export class CreateRecordScreenComponent extends React.Component {
     return question ? (
       <Question question={question} onAnswer={this.handleAnswer}/>
     ) : (
-      <Price price={price} onChange={this.handlePriceChange} onSubmit={this.handleSubmit}/>
+      <Price price={price} onPriceChange={this.handlePriceChange} onSubmit={this.handleSubmit}/>
     );
   }
 }

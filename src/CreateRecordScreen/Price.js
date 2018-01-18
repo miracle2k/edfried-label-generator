@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { primaryColor, backgroundColor, borderColor, textColor, subheaderColor, fontSize } from '../style';
+import { primaryColor, backgroundColor, borderColor, textColor, subheaderColor, fontSize, shadow } from '../style';
 
 export class Price extends React.Component {
   static propTypes = {
@@ -13,7 +13,7 @@ export class Price extends React.Component {
   handleChangeText = (text) => {
     const price = parseFloat(text);
     if (!isNaN(price)) {
-      this.props.onChange(price);
+      this.props.onPriceChange(price);
     }
   };
 
@@ -51,18 +51,12 @@ const styles = StyleSheet.create({
   },
   card: {
     minWidth: 300,
-    borderRadius: 2,
-    borderWidth: 1,
     borderColor: borderColor,
     backgroundColor: 'white',
+    ...shadow,
   },
   cardContent: {
     padding: 20,
-    fontSize: fontSize,
-  },
-  cardContent: {
-    padding: 20,
-    fontSize: fontSize,
   },
   subheader: {
     fontSize: fontSize,
@@ -76,7 +70,6 @@ const styles = StyleSheet.create({
   cardActions: {
     borderTopWidth: 1,
     borderTopColor: borderColor,
-    fontSize: fontSize,
   },
   submit: {
     padding: 20,

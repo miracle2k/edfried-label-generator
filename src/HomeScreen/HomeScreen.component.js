@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import { Ionicons } from '@expo/vector-icons';
-import { primaryColor, subheaderColor, backgroundColor, borderColor, grayedColor, textColor, fontSize } from '../style';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { primaryColor, subheaderColor, backgroundColor, borderColor, grayedColor, textColor, fontSize, shadow } from '../style';
 import { Record, getRecords, getRecordCode } from '../records';
 
 export class HomeScreenComponent extends React.Component {
@@ -43,7 +43,7 @@ export class HomeScreenComponent extends React.Component {
           </View>
         </View>
         <TouchableOpacity onPress={this.handleSettings} style={styles.settings}>
-          <Ionicons name="md-settings" size={20} color={textColor}/>
+          <Icon name="settings" size={20} color={textColor}/>
         </TouchableOpacity>
       </View>
     );
@@ -60,9 +60,8 @@ const styles = StyleSheet.create({
   card: {
     minWidth: 300,
     borderRadius: 2,
-    borderWidth: 1,
-    borderColor: borderColor,
     backgroundColor: 'white',
+    ...shadow,
   },
   cardContent: {
     padding: 20,

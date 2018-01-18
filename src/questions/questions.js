@@ -1,5 +1,3 @@
-import yaml from 'js-yaml';
-
 type Answer = any;
 type Question = any;
 
