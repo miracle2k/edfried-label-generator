@@ -14,7 +14,9 @@ export const getQuestionText = (question) => question.Frage || question.Question
 
 export const getQuestionAnswers = (question) => question.Answers;
 
-export const getAnswerText = (answer) => answer.Name || answer;
+export const getAnswerText = (answer) => 
+  typeof answer === 'string' ? answer :
+  typeof answer === 'object' && answer.Name ? answer.Name : '';
 
 export const getAnswerQuestions = (answer) => answer && answer.Questions || [];
 

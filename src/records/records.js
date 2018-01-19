@@ -24,14 +24,14 @@ export const toCsv = (records: Record[]): string => {
     'code', 
     'price', 
     ...keys
-  ].join(';');
+  ].map((s) => `"${s}"`).join(',');
   const toCsvRow = (record: Record) => [
     record.id,
     new Date(record.timestamp).toUTCString(),
-    record.price,
     getRecordCode(record),
-    ...keys.map((key) => record.answers[key]),
-  ].join(';');
+    record.price,
+    ...keys.map((key) => record.answers[key] || ''),
+  ].map((s) => `"${s}"`).join(',');
   return [
     header, 
     ...records.map(toCsvRow),
