@@ -10,25 +10,32 @@ export class Price extends React.Component {
     onPriceChange: PropTypes.func.isRequired,
   };
 
+  state = {
+    text: '0'
+  };
+
   handleChangeText = (text) => {
     const price = parseFloat(text);
     if (!isNaN(price)) {
       this.props.onPriceChange(price);
+      this.setState({ text });
     }
   };
 
   render() {
     const { price, onSubmit } = this.props;
+    const { text } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.cardContent}>
             <Text style={styles.subheader}>Price </Text>
             <TextInput
-              value={price + ''}
+              value={text}
               onChangeText={this.handleChangeText}
-              keyboardType={'numeric'}
               style={styles.price}
+              keyboardType={'numeric'}
+              autoFocus={true}
             />
           </View>
           <View style={styles.cardActions}>
