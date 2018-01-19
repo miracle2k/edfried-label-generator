@@ -1,14 +1,19 @@
 import { AsyncStorage } from 'react-native';
+import { log } from '../utility';
 
 export const saveState = (state) => {
-  console.log('saveState', state);
+  log('saveState', state);
   const value = JSON.stringify(state);
   return AsyncStorage.setItem('state', value);
 };
 
 export const loadState = () => {
   return AsyncStorage.getItem('state')
-  .then((value) => JSON.parse(value));
+  .then((value) => JSON.parse(value))
+  .then((state) => {
+    log('loadState', state);
+    return state;
+  });
 };
 
 export const persistStore = (store) => {
@@ -27,7 +32,7 @@ export const persistStore = (store) => {
 };
 
 export const persistReducer = (reducer) => (state, action) => {
-  console.log('redux', state, action);
+  log('redux', state, action);
   if (action.type === 'persisted state load') {
     return action.state;
   } else {

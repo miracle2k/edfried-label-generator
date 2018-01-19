@@ -2,31 +2,38 @@ import { Answer, getAnswerCode } from '../questions';
 
 type Record = {
   id: number,
-  date: Date,
+  timestamp: number,
+  answers: object,
+  answerCodes: string[],
   price: number,
-  answers: Answer[],
 };
 
 export const getRecordCode = (record: Record): string => {
-  const [firstAnswer, restAnswers] = record.answers.map(getAnswerCode);
-  const year = record.date.getFullYear() - 2000;
-  return [firstAnswer, year, ...restAnswers, record.id].join('');
+  const [firstCode, ...restCodes] = record.answerCodes;
+  const year = new Date(record.timestamp).getFullYear() - 2000;
+  return [firstCode, year, ...restCodes, record.id].join('');
 };
 
 export const toCsv = (records: Record[]): string => {
-  // const toCsvHeader = () => .map(toCsv).join('\n');
-  // const toCsvRow = () => {
-  //   const cells = record.answers.map(getAnswerCode);
-  //   return [
-  //     record.id,
-  //     record.date.toUTCString(),
-  //     record.date.price,
-  //     ...cells,
-  //   ].join(';');
-  // };
-
+  const keys = Object.keys(
+    records.reduce((entries, record) => ({ ...entries, ...record.answers }), {})
+  );
+  const header = [
+    '#', 
+    'date', 
+    'code', 
+    'price', 
+    ...keys
+  ].join(';');
+  const toCsvRow = (record: Record) => [
+    record.id,
+    new Date(record.timestamp).toUTCString(),
+    record.price,
+    getRecordCode(record),
+    ...keys.map((key) => record.answers[key]),
+  ].join(';');
   return [
-  //   toCsvHeader(records),
-  //   ...records.map(toCsvRow),
+    header, 
+    ...records.map(toCsvRow),
   ].join('\n');
 };

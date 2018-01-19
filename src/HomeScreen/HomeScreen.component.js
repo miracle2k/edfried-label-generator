@@ -7,10 +7,6 @@ import { primaryColor, subheaderColor, backgroundColor, borderColor, grayedColor
 import { Record, getRecords, getRecordCode } from '../records';
 
 export class HomeScreenComponent extends React.Component {
-  static navigationOptions = {
-    title: 'Product Label Generator',
-  };
-
   static propTypes = {
     navigation: PropTypes.any.isRequired,
     records: PropTypes.array.isRequired,

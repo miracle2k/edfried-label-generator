@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { NavigationActions } from 'react-navigation'; 
 import { Question } from './Question.js';
 import { Price } from './Price.js';
-import { getAnswerQuestions, getQuestionAnswers, getRecordCode } from '../questions';
+import { getAnswerQuestions, getQuestionAnswers, getAnswerCode, getQuestionKey, getAnswerText } from '../questions';
 
 export class CreateRecordScreenComponent extends React.Component {
   static propTypes = {
@@ -12,22 +12,30 @@ export class CreateRecordScreenComponent extends React.Component {
     rootAnswer: PropTypes.any.isRequired,
     createRecord: PropTypes.func.isRequired,
   };
-
-  static navigationOptions = {
-    title: 'Product Label Generator',
-  };
-
+  
   state = {
     question: null,
     questions: [],
-    answers: [],
+    answers: {},
+    answerCodes: [],
     price: 0,
   };
 
+  handleRootAnswer = (answer) => {
+    const answers = { [getQuestionKey(null)]: getAnswerText(answer) };
+    const answerCodes = [getAnswerCode(answer)];
+    const [question, ...questions] = getAnswerQuestions(answer);
+    this.setState({ answers, answerCodes, question, questions });
+  };
+
   handleAnswer = (answer) => {
-    const answers = [...this.state.answers, answer];
     const [question, ...questions] = [...this.state.questions, ...getAnswerQuestions(answer)];
-    this.setState({ answers, question, questions }, () => {
+    const answerCodes = [...this.state.answerCodes, getAnswerCode(answer)];
+    const answers = {
+      ...this.state.answers, 
+      [getQuestionKey(this.state.question)]: getAnswerText(answer),
+    };
+    this.setState({ answers, answerCodes, question, questions }, () => {
       if (question) {
         const questionAnswers = getQuestionAnswers(question);
         if (questionAnswers.length === 1) {
@@ -42,15 +50,13 @@ export class CreateRecordScreenComponent extends React.Component {
   };
 
   handleSubmit = () => {
-    this.props.createRecord(this.state.answers, this.state.price);
+    const { answers, answerCodes, price } = this.state;
+    this.props.createRecord(answers, answerCodes, price);
     this.props.navigation.dispatch(NavigationActions.back()); 
   };
 
   componentDidMount() {
-    const answer = this.props.rootAnswer;
-    const answers = [answer];
-    const [question, ...questions] = getAnswerQuestions(answer);
-    this.setState({ answers, question, questions });
+    this.handleRootAnswer(this.props.rootAnswer);
   }
 
   render() {

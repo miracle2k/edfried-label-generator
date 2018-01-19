@@ -1,6 +1,6 @@
 import { Answer, getAnswerCode } from '../questions';
 import { createReducer } from '../utility';
-import { Record, getRecordCode } from './records';
+import { Record } from './records';
 
 export const initialState = {
   id: 1,
@@ -14,6 +14,10 @@ const recordsReducer = createReducer({
     id: state.id + 1,
     list: [...state.list, record],
   }),
+  'erase records': (state) => ({
+    id: state.id,
+    list: [],
+  }),
 }, initialState);
 
 export const reducers = { records: recordsReducer };
@@ -22,19 +26,21 @@ export const reducers = { records: recordsReducer };
 
 const addRecord = (record: Record) => ({ type: 'add record', record });
 
-const createRecord = (answers: Answer[], price: number) => (dispatch, getState) => {
+const eraseRecords = () => ({ type: 'erase records' });
+
+const createRecord = (answers: object, answerCodes: string[], price: number) => (dispatch, getState) => {
   const state = getState();
   const record = {
     id: selectors.nextId(state),
-    date: new Date(), 
+    timestamp: new Date().getTime(), 
     answers,
+    answerCodes,
     price, 
   };
-  console.log('answered', record, getRecordCode(record));
   dispatch(addRecord(record));
 };
 
-export const actions = { createRecord };
+export const actions = { createRecord, eraseRecords };
 
 // Selectors
 

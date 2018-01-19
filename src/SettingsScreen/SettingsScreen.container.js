@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { selectors as questionsSelectors, actions as questionsActions } from '../questions';
-import { selectors as recordsSelectors } from '../records';
+import { selectors as recordsSelectors, actions as recordsActions } from '../records';
 import { SettingsScreenComponent } from './SettingsScreen.component';
 
 export const SettingsScreenContainer = connect(
@@ -15,5 +15,6 @@ export const SettingsScreenContainer = connect(
   (dispatch) => bindActionCreators({
     setRootAnswers: questionsActions.setRootAnswers,
     setSelectedIndex: questionsActions.setSelectedIndex,
+    eraseRecords: recordsActions.eraseRecords,
   }, dispatch)
 ) (SettingsScreenComponent);

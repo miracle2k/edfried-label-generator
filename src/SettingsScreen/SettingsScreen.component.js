@@ -9,10 +9,6 @@ import { primaryColor, backgroundColor, borderColor, textColor, subheaderColor, 
 import { toCsv } from '../records';
 
 export class SettingsScreenComponent extends React.Component {
-  static navigationOptions = {
-    title: 'Settings',
-  };
-
   static propTypes = {
     navigation: PropTypes.any.isRequired,
     rootAnswers: PropTypes.array.isRequired,
@@ -21,6 +17,7 @@ export class SettingsScreenComponent extends React.Component {
     records: PropTypes.array.isRequired,
     setRootAnswers: PropTypes.func.isRequired,
     setSelectedIndex: PropTypes.func.isRequired,
+    eraseRecords: PropTypes.func.isRequired,
   };
 
   handleImport = () => {
@@ -47,7 +44,8 @@ export class SettingsScreenComponent extends React.Component {
     const csv = toCsv(this.props.records);
     RNFetchBlob.fs.writeFile(path, csv, 'utf8')
     .then((success) => {
-      Toast.show('Exported to Downloads');
+      Toast.show(`Exported to: ${path}`);
+      this.props.eraseRecords();
     })
     .catch((error) => {
       Toast.show('An error has occured');

@@ -11,6 +11,13 @@ const Navigator = StackNavigator({
   HomeScreen: { screen: HomeScreen },
   SettingsScreen: { screen: SettingsScreen },
   CreateRecordScreen: { screen: CreateRecordScreen },
+}, {
+  navigationOptions: {
+    title: 'Product Label Generator',
+    headerTitleStyle: {
+      fontWeight: 'normal',
+    },
+  },
 });
 
 export const App = () => (
