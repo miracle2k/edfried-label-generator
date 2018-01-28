@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { Answer, getAnswerCode } from '../questions';
 
 type Record = {
@@ -27,7 +28,7 @@ export const toCsv = (records: Record[]): string => {
   ].map((s) => `"${s}"`).join(',');
   const toCsvRow = (record: Record) => [
     record.id,
-    new Date(record.timestamp).toUTCString(),
+    format(new Date(record.timestamp), 'DD.MM.YYYY'),
     getRecordCode(record),
     record.price,
     ...keys.map((key) => record.answers[key] || ''),
