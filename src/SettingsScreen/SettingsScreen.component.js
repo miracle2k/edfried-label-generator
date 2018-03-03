@@ -38,22 +38,29 @@ export class SettingsScreenComponent extends React.Component {
     });
   };
 
-  handleExport = () => {
+  handleExport = (e, doReset) => {
     const filename = `${new Date().getTime()}`;
     const path = RNFetchBlob.fs.dirs.DownloadDir + '/ProductLabels-' + filename + '.csv';
     const csv = toCsv(this.props.records);
     RNFetchBlob.fs.writeFile(path, csv, 'utf8')
     .then((success) => {
       Toast.show(`Exported to: ${path}`);
-      this.props.eraseRecords();
+      if (doReset) {
+        this.props.eraseRecords();
+      }
     })
     .catch((error) => {
       Toast.show('An error has occured');
     });
   };
 
+  handleExportAndReset = (e) => {
+    this.handleExport(e, true);
+  };
+
   render() {
     const { selectedIndex, rootAnswers, records, setSelectedIndex } = this.props;
+
     return (
       <View style={styles.container}>
         <View style={styles.card}>
@@ -71,6 +78,7 @@ export class SettingsScreenComponent extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
+
         <View style={styles.card}>
           <View style={styles.cardContent}>
             <Text style={styles.subheader}>Records</Text>
@@ -79,6 +87,9 @@ export class SettingsScreenComponent extends React.Component {
           <View style={styles.cardActions}>
             <TouchableOpacity onPress={this.handleExport}>
               <Text style={styles.cardAction}>EXPORT</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.handleExportAndReset}>
+              <Text style={styles.cardAction}>EXPORT AND RESET</Text>
             </TouchableOpacity>
           </View>
         </View>
