@@ -29,12 +29,12 @@ export class HomeScreenComponent extends React.Component {
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.cardContent}>
-            <Text style={styles.subheader}>Last code:</Text>
+            <Text style={styles.subheader}>Letzter Code:</Text>
             <Text style={styles.code}>{lastCode || '-'}</Text>
           </View>
           <View style={styles.cardActions}>
             <TouchableOpacity onPress={this.handleNewProduct}>
-              <Text style={styles.newProduct}>NEW PRODUCT</Text>
+              <Text style={styles.newProduct}>NEUES PRODUKT</Text>
             </TouchableOpacity>
           </View>
         </View>

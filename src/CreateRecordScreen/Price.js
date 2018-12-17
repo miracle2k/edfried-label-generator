@@ -29,7 +29,7 @@ export class Price extends React.Component {
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.cardContent}>
-            <Text style={styles.subheader}>Price </Text>
+            <Text style={styles.subheader}>Preis</Text>
             <TextInput
               value={text}
               onChangeText={this.handleChangeText}

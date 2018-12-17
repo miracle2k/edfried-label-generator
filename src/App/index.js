@@ -11,12 +11,13 @@ const Navigator = createStackNavigator({
   SettingsScreen: { screen: SettingsScreen },
   CreateRecordScreen: { screen: CreateRecordScreen },
 }, {
-  navigationOptions: {
-    title: 'Product Label Generator',
+  defaultNavigationOptions: {
+    title: 'Produkt Labels',
+    headerTruncatedBackTitle: "Zurück",
     headerTitleStyle: {
       fontWeight: 'normal',
-    },
-  },
+    }
+  }
 });
 
 const AppContainer = createAppContainer(Navigator);
