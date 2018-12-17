@@ -1,13 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { Provider } from 'react-redux';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { HomeScreen } from '../HomeScreen';
 import { SettingsScreen } from '../SettingsScreen';
 import { CreateRecordScreen } from '../CreateRecordScreen';
 import { store } from './store';
 
-const Navigator = StackNavigator({
+const Navigator = createStackNavigator({
   HomeScreen: { screen: HomeScreen },
   SettingsScreen: { screen: SettingsScreen },
   CreateRecordScreen: { screen: CreateRecordScreen },
@@ -20,8 +19,12 @@ const Navigator = StackNavigator({
   },
 });
 
+const AppContainer = createAppContainer(Navigator);
+
 export const App = () => (
   <Provider store={store}>
+    <AppContainer>
      <Navigator/>
+    </AppContainer>
   </Provider>
 );
