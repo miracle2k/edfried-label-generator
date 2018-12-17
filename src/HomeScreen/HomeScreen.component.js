@@ -24,14 +24,32 @@ export class HomeScreenComponent extends React.Component {
 
   render() {
     const { records } = this.props;
-    const lastCode = records.length && getRecordCode(records[records.length - 1]);
+    const lastRecord = records.length && records[records.length - 1];
+
+    let lastProduct;
+    if (lastRecord) {
+      lastProduct = <View>
+        <Text><Text style={styles.tableKey}>Code</Text>: <Text style={styles.code}>{getRecordCode(lastRecord)}</Text></Text>
+        <Text><Text style={styles.tableKey}>Preis</Text>: {lastRecord.price}</Text>
+        {Object.entries(lastRecord.answers).map(([key, answer]) => {
+          if (key === 'root') {
+            return;
+          }
+          return <Text key={key}>
+            <Text style={styles.tableKey}>{key}</Text>: {answer}
+          </Text>
+        })}
+      </View>
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.card}>
-          <View style={styles.cardContent}>
-            <Text style={styles.subheader}>Letzter Code:</Text>
-            <Text style={styles.code}>{lastCode || '-'}</Text>
-          </View>
+          {lastProduct ?
+            <View style={styles.cardContent}>
+              <Text style={styles.subheader}>Letztes Produkt:</Text>
+              {lastProduct}
+            </View> : null}
           <View style={styles.cardActions}>
             <TouchableOpacity onPress={this.handleNewProduct}>
               <Text style={styles.newProduct}>NEUES PRODUKT</Text>
@@ -79,8 +97,10 @@ const styles = StyleSheet.create({
     color: primaryColor,
   },
   code: {
-    fontSize: fontSize * 1.5,
-    textAlign: 'center',
+    fontWeight: "bold",
+  },
+  tableKey: {
+    color: 'gray',
   },
   subheader: {
     color: subheaderColor,
