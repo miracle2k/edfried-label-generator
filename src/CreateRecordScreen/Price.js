@@ -11,7 +11,7 @@ export class Price extends React.Component {
   };
 
   state = {
-    text: '0'
+    text: ''
   };
 
   handleChangeText = (text) => {
