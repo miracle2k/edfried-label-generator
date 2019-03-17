@@ -1,38 +1,50 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import { backgroundColor, borderColor, textColor, subheaderColor, fontSize, shadow } from '../style';
-import { getQuestionText, getQuestionAnswers, getAnswerText } from '../questions';
+import {Touchable, Screen, Box, Text, Bold, Padding, Flex, Row, Column, Divider, Absolute} from '../components';
+import {Questions, Answers} from '../data';
 
 export class Question extends React.Component {
   static propTypes = {
     question: PropTypes.any.isRequired,
     onAnswer: PropTypes.func.isRequired,
+    onBack: PropTypes.func.isRequired,
   };
 
   handleAnswer = (answer) => () => {
     this.props.onAnswer(answer);
   };
 
+  handleBack = () => {
+    this.props.onBack();
+  };
+
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBack);
+  };
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBack);
+  };
+
   render() {
-    const { question } = this.props;
+    const {question} = this.props;
     return (
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scroll}>
-          <View style={styles.card}>
-            <Text style={styles.title}>{getQuestionText(question)}</Text>
-            {getQuestionAnswers(question).map((answer, i) => (
-              <TouchableOpacity onPress={this.handleAnswer(answer)} key={i}>
-                <Text style={styles.option}>{getAnswerText(answer)}</Text>
-              </TouchableOpacity>
+      <Column flex={Flex.FULL} justify={Flex.JUSTIFY.CENTER}>
+        <Padding>
+          <Box>
+            <Text>{Questions.getText(question)}</Text>
+            {Questions.getAnswers(question).map((answer, i) => (
+              <Touchable onPress={this.handleAnswer(answer)} key={i}>
+                <Text>{Answers.getText(answer)}</Text>
+              </Touchable>
             ))}
-          </View>
-        </ScrollView>
-      </View>
+          </Box>
+        </Padding>
+      </Column>
     );
   }
 }
-
+{/*
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -66,4 +78,4 @@ const styles = StyleSheet.create({
     fontSize: fontSize,
     color: textColor,
   },
-});
+});*/}

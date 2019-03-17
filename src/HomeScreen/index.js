@@ -1,1 +1,1 @@
-export { HomeScreenContainer as HomeScreen } from './HomeScreen.container';
+export {HomeScreenContainer as HomeScreen} from './HomeScreen.container';

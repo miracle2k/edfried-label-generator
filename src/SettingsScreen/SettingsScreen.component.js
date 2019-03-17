@@ -1,22 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, TouchableOpacity, Picker } from 'react-native';
-import { DocumentPicker } from 'react-native-document-picker';
+import {Picker} from 'react-native';
+import {Box, Text, Bold, Padding, Flex, Row, Column, Divider, Absolute, Touchable} from '../components';
+import {DocumentPicker} from 'react-native-document-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import yaml from 'js-yaml';
 import Toast from 'react-native-simple-toast';
-import { primaryColor, backgroundColor, borderColor, textColor, subheaderColor, fontSize, shadow } from '../style';
-import { toCsv } from '../records';
+import {primaryColor, backgroundColor, borderColor, textColor, subheaderColor, fontSize, shadow} from '../style';
+import {toCsv} from '../data';
 
 export class SettingsScreenComponent extends React.Component {
   static propTypes = {
     navigation: PropTypes.any.isRequired,
-    rootAnswers: PropTypes.array.isRequired,
-    rootAnswer: PropTypes.any.isRequired,
+    questionaries: PropTypes.array.isRequired,
+    questionary: PropTypes.any.isRequired,
     selectedIndex: PropTypes.number.isRequired,
-    records: PropTypes.array.isRequired,
-    setRootAnswers: PropTypes.func.isRequired,
-    setSelectedIndex: PropTypes.func.isRequired,
+    records: PropTypes.object.isRequired,
+    setQuestionaries: PropTypes.func.isRequired,
+    setQuestionary: PropTypes.func.isRequired,
     eraseRecords: PropTypes.func.isRequired,
   };
 
@@ -26,14 +27,14 @@ export class SettingsScreenComponent extends React.Component {
     }, (error, result) => {
       if (result) {
         RNFetchBlob.fs.readFile(result.uri, 'utf8')
-        .then((text) => yaml.safeLoad(text))
-        .then((rootAnswers) => {
-          this.props.setRootAnswers(rootAnswers);
-          Toast.show('Imported questions successfully');
-        })
-        .catch((error) => {
-          Toast.show('An error has occured');
-        });
+          .then((text) => yaml.safeLoad(text))
+          .then((questionaries) => {
+            this.props.setQuestionaries(questionaries);
+            Toast.show('Imported questions successfully');
+          })
+          .catch((error) => {
+            Toast.show('An error has occured');
+          });
       }
     });
   };
@@ -43,91 +44,103 @@ export class SettingsScreenComponent extends React.Component {
     const path = RNFetchBlob.fs.dirs.DownloadDir + '/ProductLabels-' + filename + '.csv';
     const csv = toCsv(this.props.records);
     RNFetchBlob.fs.writeFile(path, csv, 'utf8')
-    .then((success) => {
-      Toast.show(`Exported to: ${path}`);
-      if (doReset) {
-        this.props.eraseRecords();
-      }
-    })
-    .catch((error) => {
-      Toast.show('An error has occured');
-    });
+      .then((success) => {
+        Toast.show(`Exported to: ${path}`);
+        if (doReset) {
+          this.props.eraseRecords();
+        }
+      })
+      .catch((error) => {
+        Toast.show('An error has occured');
+      });
   };
 
   handleExportAndReset = (e) => {
     this.handleExport(e, true);
   };
 
+  handleSelect = (index) => {
+    this.props.setQuestionary(index);
+  };
+
   render() {
-    const { selectedIndex, rootAnswers, records, setSelectedIndex } = this.props;
+    const {selectedIndex, questionaries, questionary, records, setQuestionary} = this.props;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.card}>
-          <View style={styles.cardContent}>
-            <Text style={styles.subheader}>Questions</Text>
-            <Picker selectedValue={selectedIndex} onValueChange={setSelectedIndex}>
-              {rootAnswers.map((rootAnswer, i) => (
-                <Picker.Item key={i} label={rootAnswer.Name} value={i}/>
-              ))}
-            </Picker>
-          </View>
-          <View style={styles.cardActions}>
-            <TouchableOpacity onPress={this.handleImport}>
-              <Text style={styles.cardAction}>IMPORT</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.cardContent}>
-            <Text style={styles.subheader}>Records</Text>
-            <Text style={styles.row}>Records: {records.length}</Text>
-          </View>
-          <View style={styles.cardActions}>
-            <TouchableOpacity onPress={this.handleExport}>
-              <Text style={styles.cardAction}>EXPORT</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.handleExportAndReset}>
-              <Text style={styles.cardAction}>EXPORT AND RESET</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+      <Column flex={Flex.FULL} justify={Flex.JUSTIFY.CENTER}>
+        <Padding>
+          <Box>
+            <Padding>
+              <Text color={Text.COLOR.SUBHEADER} size={Text.SIZE.SMALL}>Questions</Text>
+              <Picker selectedValue={selectedIndex} onValueChange={this.handleSelect}>
+                {questionaries.map((questionary, i) => (
+                  <Picker.Item key={i} label={questionary.Name} value={i}/>
+                ))}
+              </Picker>
+            </Padding>
+            <Divider/>
+            <Touchable onPress={this.handleImport}>
+              <Padding>
+                <Text align={Text.ALIGN.CENTER} color={Text.COLOR.PRIMARY}>IMPORT</Text>
+              </Padding>
+            </Touchable>
+          </Box>
+        </Padding>
+        <Padding>
+          <Box>
+            <Padding>
+              <Text color={Text.COLOR.SUBHEADER} size={Text.SIZE.SMALL}>Records</Text>
+              <Text>Records: {Object.keys(records).length}</Text>
+            </Padding>
+            <Divider/>
+            <Touchable onPress={this.handleExport}>
+              <Padding>
+                <Text align={Text.ALIGN.CENTER} color={Text.COLOR.PRIMARY}>EXPORT</Text>
+              </Padding>
+            </Touchable>
+            <Divider/>
+            <Touchable onPress={this.handleExportAndReset}>
+              <Padding>
+                <Text align={Text.ALIGN.CENTER} color={Text.COLOR.PRIMARY}>EXPORT AND RESET</Text>
+              </Padding>
+            </Touchable>
+          </Box>
+        </Padding>
+      </Column>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: backgroundColor,
-  },
-  card: {
-    minWidth: 300,
-    marginBottom: 30,
-    borderRadius: 2,
-    backgroundColor: 'white',
-    ...shadow,
-  },
-  subheader: {
-    fontSize: fontSize,
-    color: subheaderColor,
-  },
-  row: {
-    fontSize: fontSize,
-  },
-  cardContent: {
-    padding: 20,
-  },
-  cardAction: {
-    borderTopWidth: 1,
-    borderTopColor: borderColor,
-    padding: 20,
-    fontSize: fontSize,
-    color: primaryColor,
-    textAlign: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     backgroundColor: backgroundColor,
+//   },
+//   card: {
+//     minWidth: 300,
+//     marginBottom: 30,
+//     borderRadius: 2,
+//     backgroundColor: 'white',
+//     ...shadow,
+//   },
+//   subheader: {
+//     fontSize: fontSize,
+//     color: subheaderColor,
+//   },
+//   row: {
+//     fontSize: fontSize,
+//   },
+//   cardContent: {
+//     padding: 20,
+//   },
+//   cardAction: {
+//     borderTopWidth: 1,
+//     borderTopColor: borderColor,
+//     padding: 20,
+//     fontSize: fontSize,
+//     color: primaryColor,
+//     textAlign: 'center',
+//   },
+// });

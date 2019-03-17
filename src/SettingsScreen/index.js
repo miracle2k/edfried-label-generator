@@ -1,1 +1,1 @@
-export { SettingsScreenContainer as SettingsScreen } from './SettingsScreen.container';
+export {SettingsScreenContainer as SettingsScreen} from './SettingsScreen.container';
