@@ -1,36 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Touchable, Screen, Box, Text, Bold, Padding, Flex, Row, Column, Divider, Absolute} from '../components';
-import {Questions, Answers, getAnswer, replyQuestion, startReplying} from '../data';
+import {Touchable, Screen, Box, Subheader, Text, Bold, Padding, Flex, Row, Column, Divider, Absolute} from '../components';
+import {Questions, Answers, getAnswer, replyQuestion, startReplying, getRecordCode, getCode, Replies} from '../data';
 
 export class RepliesScreen extends React.Component {
   static propTypes = {
-    record: PropTypes.any.isRequired,
-    replies: PropTypes.func.isRequired,
-    navigation: PropTypes.any.isRequired,
+    record: PropTypes.object.isRequired,
+    replies: PropTypes.object.isRequired,
+    onSelectedQuestion: PropTypes.func,
+    onSelectedPrice: PropTypes.func,
   };
 
-  handleSelectQuestion = (question) => () => {
-    let {navigate} = this.props.navigation;
-    let {record} = this.props;
-    let answersKeys = record.answersKeys.slice(0, i);
-    let replies = answersKeys.reduce(replyQuestion, startReplying(record.questionary));
-    let params = {replies, record};
-    navigate('EditQuestionScreen', params);
+  handleSelectQuestion = (question, i) => () => {
+    this.props.onSelectedQuestion(question, i);
   };
 
   handleSelectPrice = () => {
-    let {navigate} = this.props.navigation;
-    let {record} = this.props;
-    let params = {record};
-    navigate('EditPriceScreen', params);
+    this.props.onSelectedPrice();
   };
 
   renderQuestion = (question, i) => {
-    let answer = getAnswer(this.props.replies, question);
+    let answer = Replies.getAnswer(this.props.replies) (question);
     return (
       <Touchable onPress={this.handleSelectQuestion(question, i)} key={i}>
-        <Text>{Questions.getText(question)}: {Answers.getText(answer)}</Text>
+        <Padding double bottom={Padding.NONE}>
+          <Row>
+            <Text size={Text.SIZE.SMALL}>{Questions.getText(question)}</Text> 
+            <Text align={Text.ALIGN.RIGHT}>{Answers.getText(answer)}</Text> 
+          </Row>
+        </Padding>
       </Touchable>
     );
   };
@@ -41,13 +39,20 @@ export class RepliesScreen extends React.Component {
       <Column flex={Flex.FULL} justify={Flex.JUSTIFY.CENTER}>
         <Padding>
           <Box>
-            <Padding>
-              <Text>Edit label <Bold size={Text.SIZE.SMALL}>{getRecordCode(record)}</Bold></Text>
+            <Padding double>
+              <Row>
+                <Subheader>Antwort bearbeiten</Subheader> 
+                <Bold color={Text.COLOR.SUBHEADER}>{getCode(record)}</Bold>
+              </Row>
             </Padding>
-            {replies.map(this.renderQuestion)}
+            <Divider/>
+            {Replies.getQuestions(replies).map(this.renderQuestion)}
             <Touchable onPress={this.handleSelectPrice}>
-              <Padding>
-                Price: {record.price}
+              <Padding double>
+                <Row>
+                  <Text size={Text.SIZE.SMALL}>Preis:</Text> 
+                  <Text align={Text.ALIGN.RIGHT}>{record.price}</Text> 
+                </Row>
               </Padding>
             </Touchable>
           </Box>
@@ -56,38 +61,3 @@ export class RepliesScreen extends React.Component {
     );
   }
 }
-{/*
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: backgroundColor,
-  },
-  scroll: {
-    padding: 32,
-  },
-  scrollContent: {
-    padding: 16,
-    paddingBottom: 64,
-  },
-  card: {
-    minWidth: 300,
-    borderRadius: 2,
-    backgroundColor: 'white',
-    ...shadow,
-  },
-  title: {
-    padding: 20,
-    fontSize: fontSize,
-    color: subheaderColor,
-    borderBottomColor: borderColor,
-    borderBottomWidth: 1,
-  },
-  option: {
-    padding: 20,
-    fontSize: fontSize,
-    color: textColor,
-  },
-});*/}

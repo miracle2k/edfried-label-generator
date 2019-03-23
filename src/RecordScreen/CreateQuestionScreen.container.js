@@ -1,27 +1,30 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {questionsSelectors, recordsActions, recordsSelectors} from '../state';
+import {questionsSelectors, recordsActions, recordsSelectors, questionariesSelectors} from '../state';
+import {Answers, getNextQuestion, replyQuestion, startReplying, undoReply, getAnswersKeys, skipSimpleQuestions, hasAnsweredQuestions} from '../data';
 import {QuestionScreen} from './QuestionScreen.component';
 
 export const CreateQuestionScreen = connect(
   (state, props) => ({
-    question: getNextQuestion(props.navigation.params.replying),
+    replying: props.navigation.getParam('replying'),
+    question: getNextQuestion(props.navigation.getParam('replying')),
   }),
   (dispatch, props) => ({
-    onAnswer: (answer) => {
-      let replying = replyQuestion(props.replying, answer);
+    onAnswer: (answerKey) => {
+      let prevReplying = props.navigation.getParam('replying')
+      let replying = skipSimpleQuestions(replyQuestion(prevReplying, answerKey));
       if (replying.nextQuestions.length) {
         let params = {replying};
         props.navigation.setParams(params);
       } else {
-        let answersKeys = getAnswersKeys(replying);
-        props.navigation.navigate('CreatePriceScreen', {answersKeys});
+        props.navigation.replace('CreatePriceScreen', {replying});
       }
     },
     onBack: () => {
-      if (props.replying.questions.length) {
-        let replying = undoReply(props.replying);
+      let prevReplying = props.navigation.getParam('replying');
+      if (hasAnsweredQuestions(prevReplying)) {
+        let replying = undoReply(prevReplying);
         let params = {replying};
         props.navigation.setParams(params);
       } else {

@@ -3,7 +3,7 @@ import {Provider} from 'react-redux';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 import {HomeScreen} from '../HomeScreen';
 import {SettingsScreen} from '../SettingsScreen';
-import {CreateQuestionScreen, CreatePriceScreen, EditRepliesScreen, EditQuestionScreen, EditPriceScreen} from '../RecordScreen';
+import {CreateQuestionScreen, CreatePriceScreen, RepliesScreen, EditQuestionScreen, EditPriceScreen} from '../RecordScreen';
 import {store} from './store';
 
 const Navigator = createStackNavigator({
@@ -11,9 +11,9 @@ const Navigator = createStackNavigator({
   SettingsScreen: {screen: SettingsScreen},
   CreateQuestionScreen: {screen: CreateQuestionScreen},
   CreatePriceScreen: {screen: CreatePriceScreen},
-  EditRepliesScreen: {screen: EditRepliesScreen},
   EditQuestionScreen: {screen: EditQuestionScreen},
   EditPriceScreen: {screen: EditPriceScreen},
+  EditRepliesScreen: {screen: RepliesScreen},
 }, {
   defaultNavigationOptions: {
     title: 'Produkt Labels',

@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {TouchableOpacity} from 'react-native';
 import {NavigationActions} from 'react-navigation';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {Box, Text, Bold, Padding, Flex, Row, Column, Divider, Absolute, Touchable} from '../components';
-import {primaryColor, subheaderColor, backgroundColor, borderColor, grayedColor, textColor, fontSize, shadow} from '../style';
-import {Record, getRecords, getRecordCode} from '../data';
+import {Box, Text, Bold, Subheader, Padding, Flex, Row, Column, Divider, Absolute, Touchable, SettingsIcon, EditIcon} from '../components';
+import {primaryColor, backgroundColor, grayedColor, textColor} from '../style';
+import {Record, getRecords, getRecordCode, getAnswer, Questions, Answers, startReplying, Records, getCode, Replies} from '../data';
 import {questionariesReducers, recordsReducers} from '../state';
 
 export class HomeScreenComponent extends React.Component {
@@ -13,30 +12,36 @@ export class HomeScreenComponent extends React.Component {
     navigation: PropTypes.any.isRequired,
     lastRecord: PropTypes.object,
     lastReplies: PropTypes.object,
+    questionary: PropTypes.object,
   };
 
   handleSettings = () => {
-    let {navigate} = this.props.navigation;
-    navigate('SettingsScreen');
+    let {navigation} = this.props;
+    navigation.push('SettingsScreen');
   };
 
   handleNewProduct = () => {
-    let {navigate} = this.props.navigation;
-    navigate('CreateQuestionScreen');
+    let {navigation, questionary} = this.props;
+    let replying = startReplying(questionary);
+    let params = {replying};
+    navigation.push('CreateQuestionScreen', params);
   };
 
   handleEdit = () => {
-    let {navigate, lastRecord, lastReplies} = this.props.navigation;
+    let {navigation, lastRecord, lastReplies} = this.props;
     let record = lastRecord;
     let replies = lastReplies;
     let params = {record, replies};
-    navigate('EditRepliesScreen', params);
+    navigation.push('EditRepliesScreen', params);
   };
 
   renderQuestion = (question, i) => {
-    let answer = getAnswer(this.props.lastReplies, question);
+    let answer = Replies.getAnswer(this.props.lastReplies) (question);
     return (
-      <Text key={i} size={Text.SIZE.SMALL}>{Questions.getText(question)}: {Answes.getText(answer)}</Text>
+      <Row key={i}>
+        <Text size={Text.SIZE.SMALL}>{Questions.getText(question)}</Text> 
+        <Text size={Text.SIZE.SMALL} align={Text.ALIGN.RIGHT}>{Answers.getText(answer)}</Text>
+      </Row>
     );
   };
 
@@ -46,19 +51,25 @@ export class HomeScreenComponent extends React.Component {
       <Padding>
         <Padding>
           <Row>
-            <Text>Letztes Produkt:</Text>
+            <Subheader>Letztes Produkt:</Subheader>
             <Touchable onPress={this.handleEdit}>
               <Row>
-                <Icon name="edit" size={20} color={primaryColor}/>
+                <EditIcon color={primaryColor}/>
                 <Text color={Text.COLOR.PRIMARY} size={Text.SIZE.SMALL}>Edit</Text>
               </Row>
             </Touchable>
           </Row>
         </Padding>
         <Padding top={Padding.NONE}>
-          <Text key={key} size={Text.SIZE.SMALL}>Code: <Bold size={Text.SIZE.SMALL}>{getRecordCode(lastRecord)}</Bold></Text>
-          {lastReplies.questions.map(this.renderQuestion)}
-          <Text key={key} size={Text.SIZE.SMALL}>Preis: {lastRecord.price}</Text>
+          <Row>
+            <Text size={Text.SIZE.SMALL}>Code:</Text> 
+            <Bold size={Text.SIZE.SMALL} align={Text.ALIGN.RIGHT}>{getCode(lastRecord)}</Bold>
+          </Row>
+          {Replies.getQuestions(lastReplies).map(this.renderQuestion)}
+          <Row>
+            <Text size={Text.SIZE.SMALL}>Preis:</Text> 
+            <Text size={Text.SIZE.SMALL} align={Text.ALIGN.RIGHT}>{lastRecord.price}</Text>
+          </Row>
         </Padding>
       </Padding>
     ) : null;
@@ -81,7 +92,7 @@ export class HomeScreenComponent extends React.Component {
         <Absolute bottom right>
           <Touchable onPress={this.handleSettings}>
             <Padding half>
-              <Icon name="settings" size={20} color={textColor}/>
+              <SettingsIcon/>
             </Padding>
           </Touchable>
         </Absolute>

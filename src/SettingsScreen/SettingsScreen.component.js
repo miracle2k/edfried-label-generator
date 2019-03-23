@@ -110,37 +110,3 @@ export class SettingsScreenComponent extends React.Component {
     );
   }
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     backgroundColor: backgroundColor,
-//   },
-//   card: {
-//     minWidth: 300,
-//     marginBottom: 30,
-//     borderRadius: 2,
-//     backgroundColor: 'white',
-//     ...shadow,
-//   },
-//   subheader: {
-//     fontSize: fontSize,
-//     color: subheaderColor,
-//   },
-//   row: {
-//     fontSize: fontSize,
-//   },
-//   cardContent: {
-//     padding: 20,
-//   },
-//   cardAction: {
-//     borderTopWidth: 1,
-//     borderTopColor: borderColor,
-//     padding: 20,
-//     fontSize: fontSize,
-//     color: primaryColor,
-//     textAlign: 'center',
-//   },
-// });

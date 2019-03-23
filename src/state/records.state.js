@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 import {createReducer} from '../utility';
-import {Answer, Record, RecordEdits, Records, Replying, getAnswersKeys, getReplies} from '../data';
+import {Answer, Record, RecordEdits, Records, Replying, getAnswers, getReplies, getAnswersKeys} from '../data';
 import {questionariesSelectors} from './questionaries.state';
 
 const initialState = {
@@ -55,8 +55,7 @@ const createRecord = (replying: Replying, price: string) => (dispatch, getState)
 
 const editRecord = (record: Record, edits: RecordEdits) => (dispatch, getState) => {
   let state = getState();
-  let record = Records.editRecord(record, edits);
-  dispatch(saveRecord(record));
+  dispatch(saveRecord(Records.editRecord(record, edits)));
 };
 
 export const recordsActions = {saveRecord, eraseRecords, createRecord, editRecord};
@@ -68,7 +67,7 @@ const nextId = (state): number => state.records.counter;
 const records = createSelector(
   (state) => state.records,
   (records): Record[] => {
-    return Objects.values(records.items).sort(
+    return Object.values(records.items).sort(
       (r0, r1) => Records.getTime(r0) - Records.getTime(r1),
     );
   },
@@ -76,9 +75,12 @@ const records = createSelector(
 
 const lastRecord = createSelector(
   records,
-  (records: Record[]): Record => records[records.length - 1],
+  (records: Record[]): ?Record => records[records.length - 1],
 );
 
-const lastReplies = createSelector(lastRecord, getReplies);
+const lastReplies = createSelector(
+  lastRecord, 
+  (record: ?Record): ?Replying => record && getReplies(record),
+);
 
 export const recordsSelectors = {nextId, records, lastRecord, lastReplies};

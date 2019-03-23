@@ -7,14 +7,15 @@ import {PriceScreen} from './PriceScreen.component';
 
 export const EditPriceScreen = connect(
   (state, props) => ({
-    price: props.navigation.params.record.price,
+    price: props.navigation.getParam('record').price,
   }),
   (dispatch, props) => ({
     onSubmit: (price) => {
-      dispatch(recordsActions.editRecord(props.navigation.params.record, {price}));
+      dispatch(recordsActions.editRecord(props.navigation.getParam('record'), {price}));
+      props.navigation.goBack();
     },
     onBack: () => {
       props.navigation.dispatch(NavigationActions.back());
     },
-  }, dispatch),
+  }),
 ) (PriceScreen);

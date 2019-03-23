@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {TextInput, StyleSheet} from 'react-native';
-import {Touchable, Screen, Box, Text, Bold, Padding, Flex, Row, Column, Divider, Absolute} from '../components';
+import {TextInput, BackHandler, StyleSheet} from 'react-native';
+import {Touchable, Screen, Box, Text, Subheader, Bold, Padding, Flex, Row, Column, Divider, Absolute, BackIcon} from '../components';
+import {fontSize} from '../style';
 
 export class PriceScreen extends React.Component {
   static propTypes = {
@@ -9,6 +10,10 @@ export class PriceScreen extends React.Component {
     onSubmit: PropTypes.func.isRequired,
     onBack: PropTypes.func.isRequired,
   };
+
+  static navigationOptions = ({navigation}) => ({
+    headerLeft: <Touchable onPress={navigation.getParam('onBack')}><Padding><BackIcon/></Padding></Touchable>,
+  });
 
   state = {
     price: this.props.price,
@@ -24,9 +29,11 @@ export class PriceScreen extends React.Component {
 
   handleBack = () => {
     this.props.onBack();
+    return true;
   };
 
   componentDidMount() {
+    this.props.navigation.setParams({onBack: this.handleBack});
     BackHandler.addEventListener('hardwareBackPress', this.handleBack);
   };
 
@@ -40,7 +47,9 @@ export class PriceScreen extends React.Component {
       <Column flex={Flex.FULL} justify={Flex.JUSTIFY.CENTER}>
         <Padding>
           <Box>
-            <Text>Preis</Text>
+            <Padding>
+              <Subheader>Preis</Subheader>
+            </Padding>
             <TextInput
               value={price}
               onChangeText={this.handleEdit}
@@ -50,8 +59,8 @@ export class PriceScreen extends React.Component {
             />
             <Divider/>
             <Touchable onPress={this.handleSubmit}>
-              <Padding>
-                <Text color={Text.COLOR.PRIMARY} size={Text.SIZE.SMALL}>OK</Text>
+              <Padding double>
+                <Text color={Text.COLOR.PRIMARY} size={Text.SIZE.SMALL} align={Text.ALIGN.CENTER}>OK</Text>
               </Padding>
             </Touchable>
           </Box>

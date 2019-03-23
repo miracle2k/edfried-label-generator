@@ -6,23 +6,14 @@ export type Answer = {
   Questions: Question[],
 } | string;
 
-const getKey = (answer) => (
-  typeof answer === 'string' ? answer : 
-    typeof answer === 'object' ? answer.Code : ''
-);
+const getCode = (answer) => answer.Code;
 
-const getText = (answer) => (
-  typeof answer === 'string' ? answer :
-    typeof answer === 'object' ? answer.Name : ''
-);
+const getText = (answer) => answer && answer.Name || answer || '';
 
-const getQuestions = (answer) => (
-  typeof answer === 'string' ? [] :
-    typeof answer === 'object' ? answer.Questions : []
-);
+const getQuestions = (answer) => typeof answer === 'object' ? answer.Questions : [];
 
 export const Answers = {
-  getKey,
+  getCode, 
   getText,
   getQuestions,
 };

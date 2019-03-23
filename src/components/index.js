@@ -6,3 +6,4 @@ export * from './Absolute';
 export * from './Text';
 export * from './Padding';
 export * from './Divider';
+export * from './Icons';

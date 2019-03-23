@@ -17,7 +17,8 @@ export const colors = {
   background: 'white',
   border: 'rgb(217, 217, 217)',
   grayed: 'rgba(0, 0, 0, 0.54)',
-  text: 'rgba(0,0,0,0.54)',
+  subheader: 'rgba(0, 0, 0, 0.54)',
+  text: 'rgba(0,0,0,0.87)',
 };
 
 export const fontSizes = {

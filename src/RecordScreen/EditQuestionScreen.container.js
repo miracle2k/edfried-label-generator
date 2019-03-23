@@ -1,30 +1,36 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {replyQuestion, undoReply, getAnswersKeys} from '../data';
+import {replyQuestion, undoReply, getAnswersKeys, getNextQuestion, hasAnsweredQuestions, skipSimpleQuestions} from '../data';
 import {questionsSelectors, recordsActions, recordsSelectors} from '../state';
+import {Answers} from '../data';
 import {QuestionScreen} from './QuestionScreen.component';
 
 export const EditQuestionScreen = connect(
   (state, props) => ({
-    record: props.navigation.params.record,
-    replies: props.navigation.params.replies,
+    record: props.navigation.getParam('record'),
+    replying: props.navigation.getParam('replies'),
+    question: getNextQuestion(props.navigation.getParam('replies')),
   }),
   (dispatch, props) => ({
-    onAnswer: (answer) => {
-      let replying = replyQuestion(props.replying, answer);
-      if (replying.nextQuestions.length) {
-        let params = {replying};
-        return dispatch(navigation.setParams(params));
+    onAnswer: (answerKey) => {
+      let record = props.navigation.getParam('record');
+      let prevReplies = props.navigation.getParam('replies');
+      let replies = skipSimpleQuestions(replyQuestion(prevReplies, answerKey));
+      if (replies.nextQuestions.length) {
+        let params = {record, replies};
+        return props.navigation.setParams(params);
       } else {
-        let answersKeys = getAnswersKeys(replying);
-        dispatch(recordsActions.editRecord(props.navigation.params.record, {answersKeys}));
+        let answersKeys = getAnswersKeys(replies);
+        dispatch(recordsActions.editRecord(record, {answersKeys}));
         props.navigation.goBack();
       }
     },
     onBack: () => {
-      if (props.replying.questions.length) {
-        let replying = undoReply(props.replying);
-        let params = {replying};
+      let record = props.navigation.getParam('record');
+      let prevReplies = props.navigation.getParam('replies');
+      if (hasAnsweredQuestions(prevReplies)) {
+        let replies = undoReply(prevReplies);
+        let params = {record, replies};
         props.navigation.setParams(params);
       } else {
         props.navigation.goBack();

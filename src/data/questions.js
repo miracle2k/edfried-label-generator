@@ -11,9 +11,13 @@ export type Questionary = Answer;
 
 const getKey = (question: Question) => question.DataField;
 
-const getText = (question: Question) => question.Frage || question.QuestionText;
+const getText = (question: Question) => question && question.Frage || question.QuestionText || '';
 
 const getAnswers = (question: Question) => question.Answers;
+
+const getAnswer = (question: Question, answerKey: number): Answer => {
+  return question.Answers[answerKey];
+};
 
 export const defaultQuestionaries: Answer[]  = [
   {'Name':'Weihnachten','Code':'W','Questions':[{'Frage':'Welches Werkstück?','DataField':'Was','Answers':[{'Name':'Baum','Code':'B','Questions':[{'QuestionText':'Welcher Baum?','DataField':'Art','Answers':['Nobilis','Nordmann']},{'QuestionText':'Größe?','DataField':'Größe','Answers':['40 cm','50 cm','60 cm','70 cm','80 cm','90 cm','100 cm']},{'QuestionText':'Welche Farbe?','DataField':'Farbe','Answers':['rot','gold','silber','weiß','rosa','blau','violett','natur','grün','schwarz','orange','pink']},{'QuestionText':'Mit Kerze?','DataField':'Kerze','Answers':['mit Kerze','ohne Kerze']}]},{'Name':'Adventskranz','Code':'A','Questions':[{'QuestionText':'Welches Grün?','DataField':'Art','Answers':['Nobilis','Nordmann','Mix','ohne Grün']},{'QuestionText':'Welche Größe?','DataField':'Größe','Answers':['15 cm','20 cm','25 cm','30 cm','35 cm','40 cm','45 cm','50 cm','55 cm','60 cm','65 cm','75 cm','80 cm']},{'QuestionText':'Welche Farbe?','DataField':'Farbe','Answers':['rot','gold','silber','weiß','rosa','blau','violett','natur','grün','schwarz','orange','pink']},{'QuestionText':'Mit Kerze?','DataField':'Kerze','Answers':['mit Kerze','ohne Kerze']}]},{'Name':'Liegestrauß','Code':'L','Questions':[{'QuestionText':'Welches Grün?','DataField':'Art','Answers':['Mix']},{'QuestionText':'Welche Größe?','DataField':'Größe','Answers':['uni']},{'QuestionText':'Welche Farbe?','DataField':'Farbe','Answers':['rot','gold','silber','weiß','rosa','blau','violett','natur','grün','schwarz','orange','pink']},{'QuestionText':'Mit Kerze?','DataField':'Kerze','Answers':['ohne Kerze']}]},{'Name':'Strauß','Code':'S','Questions':[{'QuestionText':'Welches Grün?','DataField':'Art','Answers':['Mix']},{'QuestionText':'Welche Größe?','DataField':'Größe','Answers':['uni']},{'QuestionText':'Welche Farbe?','DataField':'Farbe','Answers':['rot','gold','silber','weiß','rosa','blau','violett','natur','grün','schwarz','orange','pink']},{'QuestionText':'Mit Kerze?','DataField':'Kerze','Answers':['ohne Kerze']}]},{'Name':'Tonschale','Code':'T','Questions':[{'QuestionText':'Welches Grün?','DataField':'Art','Answers':['Mix']},{'QuestionText':'Welche Größe?','DataField':'Größe','Answers':['uni']},{'QuestionText':'Welche Farbe?','DataField':'Farbe','Answers':['rot','gold','silber','weiß','rosa','blau','violett','natur','grün','schwarz','orange','pink']},{'QuestionText':'Mit Kerze?','DataField':'Kerze','Answers':['ohne Kerze','mit Kerze']}]},{'Name':'Gefäßfüllung','Code':'G','Questions':[{'QuestionText':'Welches Grün?','DataField':'Art','Answers':['mit Grün','ohne Grün']},{'QuestionText':'Welche Größe?','DataField':'Größe','Answers':['uni']},{'QuestionText':'Welche Farbe?','DataField':'Farbe','Answers':['rot','gold','silber','weiß','rosa','blau','violett','natur','grün','schwarz','orange','pink']},{'QuestionText':'Mit Kerze?','DataField':'Kerze','Answers':['ohne Kerze','mit Kerze']}]},{'Name':'Callunatopf','Code':'C','Questions':[{'QuestionText':'Welches Grün?','DataField':'Art','Answers':['Mix']},{'QuestionText':'Welche Größe?','DataField':'Größe','Answers':['uni']},{'QuestionText':'Welche Farbe?','DataField':'Farbe','Answers':['rot','gold','silber','weiß','rosa','blau','violett','natur','grün','schwarz','orange','pink']},{'QuestionText':'Mit Kerze?','DataField':'Kerze','Answers':['ohne Kerze','mit Kerze']}]},{'Name':'Frischblumen','Code':'F','Questions':[{'QuestionText':'Welche Art?','DataField':'Art','Answers':['Strauß weihnachtlich','Strauß nicht weihnachtlich','Gesteck']},{'QuestionText':'Welche Größe?','DataField':'Größe','Answers':['uni']},{'QuestionText':'Welche Farbe?','DataField':'Farbe','Answers':['rot','gold','silber','weiß','rosa','blau','violett','natur','grün','schwarz','orange','pink']},{'QuestionText':'Mit Kerze?','DataField':'Kerze','Answers':['ohne Kerze','mit Kerze']}]}]}]},
@@ -26,6 +30,7 @@ export const Questions = {
   getKey, 
   getText,
   getAnswers,
+  getAnswer,
 };
 
 export const Questionaries = Answers;

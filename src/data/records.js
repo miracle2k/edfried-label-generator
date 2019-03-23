@@ -2,18 +2,19 @@ import {format} from 'date-fns';
 import {Questions} from './questions';
 import {Answers} from './answers';
 import {generateUid} from '../utility';
-import {Replying, replyQuestion, startReplying} from './replying';
+import {Replying, replyQuestion, startReplying, getQuestions, getAnswers, getAnswer, getQuestion, getAnswersByQuestionKeys} from './replying';
 
 export type Record = {
   id: string,
-  questionary: Questionary,
-  answersKeys: string[],
+  code: string,
   price: string,
+  questionary: Questionary,
+  answersKeys: number[],
   createdAt: number,
   editedAt: number,
 };
 
-export const createRecord = (id: string, questionary: Questionary, answersKeys: string[], price: string) => ({
+export const createRecord = (id: string, questionary: Questionary, answersKeys: number[], price: string) => ({
   id,
   questionary,
   answersKeys,
@@ -26,8 +27,16 @@ export const getReplies = (record: Record): Replying => {
   return record.answersKeys.reduce(replyQuestion, startReplying(record.questionary));
 };
 
+export const getCode = (record: Record): string => {
+  let [firstCode, ...codes] = getAnswers(getReplies(record)).map(Answers.getCode).filter(Boolean);
+  let year = new Date(record.createdAt).getFullYear() - 2000;
+  return [firstCode, year, ...codes, record.id].join('');
+};
+
+const getTime = (record: Record) => record.editedAt || record.createdAt;
+
 export type RecordEdits = {
-  answersKeys?: string[],
+  answersKeys?: number[],
   price?: string,
 };
 
@@ -38,16 +47,11 @@ export const editRecord = (record: Record, edits: RecordEdits) => ({
   editedAt: new Date().getTime(),
 });
 
-export const getRecordCode = (record: Record): string => {
-  let [firstCode, ...codes] = record.answersKeys;
-  let year = new Date(record.timestamp).getFullYear() - 2000;
-  return [firstCode, year, ...codes, record.id].join('');
-};
-
 export const toCsv = (records: Record[]): string => {
   let toCsvRow = (cells) => cells.map((s) => `"${s}"`).join(',');
   let replies = records.map(getReplies);
-  let questionsKeys = Object.keys(Object.assign({}, ...replies.map((reply) => reply.answers)));
+  let answersByQuestionKeys = replies.map(getAnswersByQuestionKeys);
+  let questionsKeys = Object.keys(Object.assign({}, ...answersByQuestionKeys));
   let headerRow = toCsvRow([
     '#', 
     'date', 
@@ -59,16 +63,14 @@ export const toCsv = (records: Record[]): string => {
     (record: Record, i: number) => toCsvRow([
       record.id,
       format(new Date(record.createdAt), 'DD.MM.YYYY'),
-      getRecordCode(record),
+      getCode(record),
       record.price,
       ...questionsKeys.map(
-        (questionKey: string) => replies[i] [questionKey] || '',
+        (questionKey: string) => Answers.getText(answersByQuestionKeys[i] [questionKey]) || '',
       ),
     ]),
   );
   return [headerRow, ...recordsRows].join('\n');
 };
 
-export const getTime = (record: Record) => record.editedAt || record.createdAt;
-
-export const Records = {createRecord, getReplies, getTime};
+export const Records = {createRecord, getReplies, getTime, editRecord, getCode};
