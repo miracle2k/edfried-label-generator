@@ -1,1 +1,0 @@
-export { CreateRecordScreenContainer as CreateRecordScreen } from './CreateRecordScreen.container';

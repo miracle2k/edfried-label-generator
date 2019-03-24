@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { selectors as recordsSelectors } from '../records';
-import { HomeScreenComponent } from './HomeScreen.component';
+import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {recordsSelectors, questionariesSelectors} from '../state';
+import {HomeScreenComponent} from './HomeScreen.component';
 
 export const HomeScreenContainer = connect(
   (state) => ({
-    records: recordsSelectors.records(state),
+    lastRecord: recordsSelectors.lastRecord(state),
+    lastReplies: recordsSelectors.lastReplies(state),
+    questionary: questionariesSelectors.questionary(state),
   }),
   (dispatch) => bindActionCreators({
 

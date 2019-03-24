@@ -1,109 +1,102 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
-import { NavigationActions } from 'react-navigation';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { primaryColor, subheaderColor, backgroundColor, borderColor, grayedColor, textColor, fontSize, shadow } from '../style';
-import { Record, getRecords, getRecordCode } from '../records';
+import {TouchableOpacity} from 'react-native';
+import {NavigationActions} from 'react-navigation';
+import {Box, Text, Bold, Subheader, Padding, Flex, Row, Column, Divider, Absolute, Touchable, SettingsIcon, EditIcon} from '../components';
+import {primaryColor, backgroundColor, grayedColor, textColor} from '../style';
+import {Record, getRecords, getRecordCode, getAnswer, Questions, Answers, startReplying, Records, getCode, Replies} from '../data';
+import {questionariesReducers, recordsReducers} from '../state';
 
 export class HomeScreenComponent extends React.Component {
   static propTypes = {
     navigation: PropTypes.any.isRequired,
-    records: PropTypes.array.isRequired,
-  };
-
-  handleNewProduct = () => {
-    const { navigate } = this.props.navigation;
-    navigate('CreateRecordScreen');
+    lastRecord: PropTypes.object,
+    lastReplies: PropTypes.object,
+    questionary: PropTypes.object,
   };
 
   handleSettings = () => {
-    const { navigate } = this.props.navigation;
-    navigate('SettingsScreen');
+    let {navigation} = this.props;
+    navigation.push('SettingsScreen');
   };
 
-  render() {
-    const { records } = this.props;
-    const lastRecord = records.length && records[records.length - 1];
+  handleNewProduct = () => {
+    let {navigation, questionary} = this.props;
+    let replying = startReplying(questionary);
+    let params = {replying};
+    navigation.push('CreateQuestionScreen', params);
+  };
 
-    let lastProduct;
-    if (lastRecord) {
-      lastProduct = <View>
-        <Text><Text style={styles.tableKey}>Code</Text>: <Text style={styles.code}>{getRecordCode(lastRecord)}</Text></Text>
-        <Text><Text style={styles.tableKey}>Preis</Text>: {lastRecord.price}</Text>
-        {Object.entries(lastRecord.answers).map(([key, answer]) => {
-          if (key === 'root') {
-            return;
-          }
-          return <Text key={key}>
-            <Text style={styles.tableKey}>{key}</Text>: {answer}
-          </Text>
-        })}
-      </View>
-    }
+  handleEdit = () => {
+    let {navigation, lastRecord, lastReplies} = this.props;
+    let record = lastRecord;
+    let replies = lastReplies;
+    let params = {record, replies};
+    navigation.push('EditRepliesScreen', params);
+  };
 
+  renderQuestion = (question, i) => {
+    let answer = Replies.getAnswer(this.props.lastReplies) (question);
     return (
-      <View style={styles.container}>
-        <View style={styles.card}>
-          {lastProduct ?
-            <View style={styles.cardContent}>
-              <Text style={styles.subheader}>Letztes Produkt:</Text>
-              {lastProduct}
-            </View> : null}
-          <View style={styles.cardActions}>
-            <TouchableOpacity onPress={this.handleNewProduct}>
-              <Text style={styles.newProduct}>NEUES PRODUKT</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <TouchableOpacity onPress={this.handleSettings} style={styles.settings}>
-          <Icon name="settings" size={20} color={textColor}/>
-        </TouchableOpacity>
-      </View>
+      <Row key={i}>
+        <Text size={Text.SIZE.SMALL}>{Questions.getText(question)}</Text> 
+        <Text size={Text.SIZE.SMALL} align={Text.ALIGN.RIGHT}>{Answers.getText(answer)}</Text>
+      </Row>
     );
-  }
-}
+  };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: backgroundColor,
-  },
-  card: {
-    minWidth: 300,
-    borderRadius: 2,
-    backgroundColor: 'white',
-    ...shadow,
-  },
-  cardContent: {
-    padding: 20,
-  },
-  cardActions: {
-    borderTopWidth: 1,
-    borderTopColor: borderColor,
-  },
-  settings: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    padding: 10,
-  },
-  newProduct: {
-    padding: 20,
-    fontSize: fontSize,
-    textAlign: 'center',
-    color: primaryColor,
-  },
-  code: {
-    fontWeight: "bold",
-  },
-  tableKey: {
-    color: 'gray',
-  },
-  subheader: {
-    color: subheaderColor,
-    fontSize: fontSize,
-  }
-});
+  renderLastRecord = () => {
+    const {lastRecord, lastReplies} = this.props;
+    return lastRecord && lastReplies ? (
+      <Padding>
+        <Padding>
+          <Row>
+            <Subheader>Letztes Produkt:</Subheader>
+            <Touchable onPress={this.handleEdit}>
+              <Row>
+                <EditIcon color={primaryColor}/>
+                <Text color={Text.COLOR.PRIMARY} size={Text.SIZE.SMALL}>Edit</Text>
+              </Row>
+            </Touchable>
+          </Row>
+        </Padding>
+        <Padding top={Padding.NONE}>
+          <Row>
+            <Text size={Text.SIZE.SMALL}>Code:</Text> 
+            <Bold size={Text.SIZE.SMALL} align={Text.ALIGN.RIGHT}>{getCode(lastRecord)}</Bold>
+          </Row>
+          {Replies.getQuestions(lastReplies).map(this.renderQuestion)}
+          <Row>
+            <Text size={Text.SIZE.SMALL}>Preis:</Text> 
+            <Text size={Text.SIZE.SMALL} align={Text.ALIGN.RIGHT}>{lastRecord.price}</Text>
+          </Row>
+        </Padding>
+      </Padding>
+    ) : null;
+  };
+
+  render = () => {
+    return (
+      <Column flex={Flex.FULL} justify={Flex.JUSTIFY.CENTER}>
+        <Padding>
+          <Box>
+            {this.renderLastRecord()}
+            <Divider/>
+            <Touchable onPress={this.handleNewProduct}>
+              <Padding double>
+                <Text align={Text.ALIGN.CENTER} color={Text.COLOR.PRIMARY}>NEUES PRODUKT</Text>
+              </Padding>
+            </Touchable>
+          </Box>
+        </Padding>
+        <Absolute bottom right>
+          <Touchable onPress={this.handleSettings}>
+            <Padding half>
+              <SettingsIcon/>
+            </Padding>
+          </Touchable>
+        </Absolute>
+      </Column>
+    );
+  };
+}

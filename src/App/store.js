@@ -1,11 +1,10 @@
-import { compose, combineReducers, createStore, applyMiddleware } from 'redux';
+import {compose, combineReducers, createStore, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { reducers as questionsReducers } from '../questions';
-import { reducers as recordsReducers } from '../records';
-import { persistStore, persistReducer } from './storage';
+import {persistStore, persistReducer} from './storage';
+import {questionariesReducers, recordsReducers} from '../state';
 
 const reducer = persistReducer(combineReducers({
-  ...questionsReducers,
+  ...questionariesReducers,
   ...recordsReducers,
 }));
 
