@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Picker} from 'react-native';
 import {Box, Text, Bold, Padding, Flex, Row, Column, Divider, Absolute, Touchable} from '../components';
 import {DocumentPicker} from 'react-native-document-picker';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import yaml from 'js-yaml';
 import Toast from 'react-native-simple-toast';
 import {primaryColor, backgroundColor, borderColor, textColor, subheaderColor, fontSize, shadow} from '../style';

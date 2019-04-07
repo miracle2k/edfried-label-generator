@@ -1,5 +1,9 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+.idea/
+local.properties
+*.iml
+
 *.xcworkspace/
 xcuserdata
 ios/build
@@ -11,6 +15,7 @@ ios/build
 /node_modules
 android/.gradle
 android/app/build
+android/build
 
 # misc
 .env.local
