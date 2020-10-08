@@ -100,7 +100,7 @@ android {
 
     defaultConfig {
         applicationId "com.product_label_generator"
-        minSdkVersion 16
+        minSdkVersion 26
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
