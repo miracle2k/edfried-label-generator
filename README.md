@@ -13,7 +13,7 @@ Build for release
 =================
 
 $ cd ./android && ./gradlew assembleRelease
-$ adb install ./app/build/outputs/apk/app-release.apk
+$ adb install ./app/build/outputs/apk/release/app-release.apk
 
 
 Configuring Packager IP Address
