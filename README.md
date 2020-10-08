@@ -12,8 +12,16 @@ Start dev server:
 Build for release
 =================
 
+APK: 
+
 $ cd ./android && ./gradlew assembleRelease
 $ adb install ./app/build/outputs/apk/release/app-release.apk
+
+
+App Bundle:
+
+$ cd ./android && ./gradlew bundleRelease
+$ ls ./app/build/outputs/bundle/release/app.aab
 
 
 Configuring Packager IP Address
