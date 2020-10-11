@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Picker} from 'react-native';
 import {Box, Text, Bold, Padding, Flex, Row, Column, Divider, Absolute, Touchable} from '../components';
 import {DocumentPicker} from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -8,6 +7,7 @@ import yaml from 'js-yaml';
 import Toast from 'react-native-simple-toast';
 import {primaryColor, backgroundColor, borderColor, textColor, subheaderColor, fontSize, shadow} from '../style';
 import {toCsv} from '../data';
+import { Picker } from '@react-native-community/picker';
 
 export class SettingsScreenComponent extends React.Component {
   static propTypes = {
@@ -22,8 +22,8 @@ export class SettingsScreenComponent extends React.Component {
   };
 
   handleImport = () => {
-    DocumentPicker.show({
-      filetype: ['*/*'],
+    DocumentPicker.pick({
+      type: ['*/*'],
     }, (error, result) => {
       if (result) {
         RNFetchBlob.fs.readFile(result.uri, 'utf8')

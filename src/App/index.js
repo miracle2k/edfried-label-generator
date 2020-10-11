@@ -1,10 +1,11 @@
 import React from 'react';
 import {Provider} from 'react-redux';
-import {createStackNavigator, createAppContainer} from 'react-navigation';
+import { createAppContainer} from 'react-navigation';
 import {HomeScreen} from '../HomeScreen';
 import {SettingsScreen} from '../SettingsScreen';
 import {CreateQuestionScreen, CreatePriceScreen, RepliesScreen, EditQuestionScreen, EditPriceScreen} from '../RecordScreen';
 import {store} from './store';
+import { createStackNavigator } from 'react-navigation-stack';
 
 const Navigator = createStackNavigator({
   HomeScreen: {screen: HomeScreen},

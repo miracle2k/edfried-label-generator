@@ -62,7 +62,7 @@ export const toCsv = (records: Record[]): string => {
   let recordsRows = records.map(
     (record: Record, i: number) => toCsvRow([
       record.id,
-      format(new Date(record.createdAt), 'DD.MM.YYYY'),
+      format(new Date(record.createdAt), 'dd.mm.yyyy'),
       getCode(record),
       record.price,
       ...questionsKeys.map(

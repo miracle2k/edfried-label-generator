@@ -1,4 +1,5 @@
-import {AsyncStorage} from 'react-native';
+// import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {log} from '../utility';
 
 const rev = 1;
